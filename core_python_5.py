@@ -13,18 +13,24 @@ def product(a, b):
 
 # Exercise 5-3
 
-def grade(num):
+def grade1(num):
 	if 90 <= num <= 100:
-		result = 'A'
+		return 'A'
 	elif 80 <= num <= 89:
-		result = 'B'
+		return 'B'
 	elif 70 <= num <= 79:
-		result = 'C'
+		return 'C'
 	elif 60 <= num <= 69:
-		result = 'D'
+		return 'D'
 	else:
-		result = 'F'
-	return result
+		return 'F'
+
+
+def grade2(score):
+	g_dic = {'A': range(90, 101), 'B': range(80, 90), 'C': range(70, 80), 'D':range(60, 70), 'F':range(0, 60)}
+	for grade, scores in g_dic.items():
+		if score in scores:
+			print grade
 
 
 # Exercise 5-4
@@ -40,6 +46,7 @@ def leapyear(year):
 
 # Exercise 5-5
 
+
 def convert_coin(input):
 	if input < 5:
 		return str(input) + 'cents'
@@ -50,11 +57,42 @@ def convert_coin(input):
 	elif 25 <= input < 100:
 		return str(divmod(input, 25)[0]) + 'quaters ' + str(divmod(divmod(input, 25)[1], 10)[0]) + 'dimes ' + str(divmod(divmod(divmod(input, 25)[1], 10)[1], 5)[0]) \
 		+ 'nickel ' + str(divmod(divmod(divmod(input, 25)[1], 10)[1], 5)[1]) + 'cents'
+
+
+def convert_coin2(input):
+	if input < 5:
+		return str(input) + 'cents'
+	elif 5 <= input < 10:
+		nickel, cent = divmod(input, 5)
+		return '%s nickel %s cents' %(nickel, cent)
+	elif 10 <= input < 25:
+		dime, remain = divmod(input, 10)
+		nickel, cent = divmod(remain, 5)
+		return ' %s dimes %s nickel %s cents' %(dime, nickel, cent)
+	elif 25 <= input < 100:
+		quater, remain = divmod(input, 25)
+		dime, remain2 = divmod(remain, 10)
+		nickel, cent = divmod(remain2, 5)
+		return '%s quaters %s dimes %s nickel %s cents' %(quater, dime, nickel, cent)
 	
+
+def convert_coin3(input_):
+	quater, remain1 = divmod(input_, 25)
+	dime, remain2 = divmod(remain1, 10)
+	nickel, cent = divmod(remain2, 5)
+	if quater > 0: 
+		return '%s quaters %s dimes %s nickel %s cents' %(quater, dime, nickel, cent)
+	elif quater == 0 and dime > 0:
+		return ' %s dimes %s nickel %s cents' %(dime, nickel, cent)
+	elif quater == 0 and dime == 0 and nickel > 0:
+		return '%s nickel %s cents' %(nickel, cent)
+	elif quater == 0 and dime == 0 and nickel == 0:
+		return '%s cents' %(cent)
+
 
 # Exercise 5-6
 
-def calculate(input):
+def calculate1(input):
 	N1, OP, N2 = input.split(' ')
 	N1, N2 = float(N1), float(N2)
 	if OP == 'add':
@@ -72,6 +110,21 @@ def calculate(input):
 	else:
 		return "can't calculate"
 
+def calculate2(input):
+	N1, OP, N2 = input.split(' ')
+	N1, N2 = float(N1), float(N2)
+
+	cal_dict = {'add': ('addition: ' + str(N1 + N2)), 'substract': ('substraction: ' + str(N1-N2)), 
+				'multiply': ('multiplication: ' + str(N1 * N2)), 'divide': ('division: ' + str(N1/N2)), 
+				'module': ('moduls: ' + str(N1%N2)), 'exponentiate': ('exponentiation: ' + str(N1**N2))}
+	return cal_dict[OP] if cal_dict.has_key(OP) else "can't calculate."
+
+
+
+# Exercise 5-7
+
+def sales_tax(raw):
+	return raw * 0.2
 
 # Exercise 5-8
 
@@ -93,7 +146,7 @@ def c2f(input):
 
 def evens_in_20():
 	result = []
-	for i in range(0, 20):
+	for i in range(0, 21):
 		if i%2 == 0:
 			result.append(i)
 	return result
@@ -108,14 +161,29 @@ def odds_in_20():
 def evaluate(n1, n2):
 	return True if n1%n2 == 0 else False
 
+def
+
 
 # Exercise 5-13
 
-time = re.compile('(\d*)hour(s)?(\d*)min(s)?')
+time = re.compile('((\d*)hour(s)?)?((\d*)min(s)?)?')
 
-def time_in_min(input):
-	result = time.search(input).groups()
-	return str(int(result[0]) * 60 + int(result[2])) + 'mins'
+def time_in_min1(input):
+	result = list(time.search(input).groups())
+	if result[1] == None:
+		result[1] = 0
+	elif result[4] == None:
+		result[4] = 0
+	return str(int(result[1]) * 60 + int(result[4])) + 'mins'
+
+
+def time_in_min2(input):
+	_, hours, _, _, mins, _ = list(time.search(input).groups())
+	if hours == None:
+		hours = 0
+	elif mins == None:
+		mins = 0
+	return '%smins' %(int(hours) * 60 + int(mins))
 
 
 # Exercise 5-14
@@ -168,7 +236,36 @@ def cal_gcd5(n1, n2):
 	if diff > min(n1, n2):
 		max_common = diff if min(n1, n2) % diff == 0 else divmod(min(n1,n2), diff)[1]
 	else:
-		max_common = min(n1, n2) if diff % min(n1, n2) == 0 else
+		max_common = min(n1, n2) if diff % min(n1, n2) == 0
+	return max_common
+
+
+def cal_gcd6(n1, n2):
+	n1, n2, diff = max(n1, n2), min(n1, n2), abs(n1-n2)
+	if n1%n2==0:
+		return n2
+	else:
+		while diff > 0:
+			if n1 % diff == 0:
+				return diff
+			else:
+				n1, n2 = n1-diff, divmod(n1, diff)[1]
+			diff = n1 - n2
+
+
+def cal_gcd7(n1, n2):
+	n1, n2 = max(n1, n2), min(n1, n2)
+	while n2 > 0:
+		if n1 % n2 == 0:
+			return n2
+		else:
+			n1, n2 = n2, n1%n2
+
+
+def cal_gcd8(n1, n2):
+	n1, n2 = max(n1, n2), min(n1, n2)
+	return n2 if n1%n2 == 0 else cal_gcd8(n2, n1%n2)
+
 
 def cal_lcm1(n1, n2):
 	mltp1, lcm = [], 0
@@ -180,6 +277,7 @@ def cal_lcm1(n1, n2):
 			break
 	return lcm
 
+
 def cal_lcm2(n1, n2):
     n1, n2 = min(n1, n2), max(n1, n2)
     c = n2
@@ -189,6 +287,7 @@ def cal_lcm2(n1, n2):
         c += n2
     return c
 
+
 # Exercise 5-16
 
 def cal_payment(balance):
@@ -196,8 +295,7 @@ def cal_payment(balance):
 	while balance > 0:
 		balance = balance - payment
 		i += 1
-
-	print '%s   $%s   $%s' %(i, payment, balance)
+	return '%s   $%s   $%s' %(i, payment, balance)
 
 
 # Exercise 5-17
@@ -214,3 +312,56 @@ def randrandrand():
 		j += 1
 	return result
 
+
+#############################################################
+
+def cal_lcm(n1, n2):
+	p, n1, n2 = n1*n2, max(n1, n2), min(n1, n2)
+	while n2 > 0:
+		if n1 % n2 == 0:
+			return p/n2
+		else:
+			n1, n2 = n2, n1%n2
+
+
+def cal_point(p_dict, j=0):
+	result = []
+	initial = p_dict.keys()[j]
+	for k in p_dict[initial]:
+		if k not in result:
+			result.append(k)
+			for m in result:
+				initial = m
+	return p_dict.keys()[j], result
+
+def cal_point(p_dict, j=0):
+	result, initial, i = [], p_dict.keys()[j], 0
+	while i < len(p_dict.keys()):
+		result.extend(list(p_dict[initial]))
+		for k in result:
+			initial = k
+		i += 1
+	return p_dict.keys()[j], set(result)
+
+
+def cal_points(p_dict):
+	result = []
+	for m in range(len(p_dict.keys())):
+		result.append(cal_point(p_dict, m))
+	return result
+
+
+def cal_point(p_dict, j=0):
+    i, result = 0, []
+    while i < len(p_dict.keys()):
+        initial = p_dict.keys()[i]
+        for k in p_dict[initial]:
+            if k != p_dict.keys()[j] and k not in result:
+                    result.append(k)
+        for m in result:
+                initial = m
+        i += 1
+    return p_dict.keys()[j], result
+
+
+	
